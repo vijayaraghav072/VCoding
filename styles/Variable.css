@@ -1,0 +1,28 @@
+/* RECONSTRUCTED FILE — original was lost on 2026-05-26.
+ * Color/typography tokens reconstructed from CSS variable usage across components.
+ * Values are best-guess defaults that match the brand color #12408e seen in
+ * Headerbar.vue / LoginView.vue. Tweak to match your original palette. */
+
+:root {
+  /* Brand */
+  --color-primary: #12408e;
+  --color-primary-rgb: 18, 64, 142;
+  --color-primary-50: hsl(216, 78%, 97%);
+  --color-primary-100: hsl(216, 70%, 92%);
+  --color-primary-200: hsl(216, 65%, 85%);
+
+  --color-secondary: #ffffff;
+  --color-secondary-rgb: 30, 41, 59;
+
+  --color-surface: #ffffff;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Header / text */
+  --hdr-text: hsl(210, 18%, 22%);
+  --hdr-text-soft: hsl(210, 10%, 45%);
+  --hdr-primary: var(--color-primary);
+  --hdr-primary-light: var(--color-primary-50);
+  --hdr-primary-dark: #0c3070;
+}

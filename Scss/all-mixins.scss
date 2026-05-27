@@ -1,0 +1,25 @@
+// RECONSTRUCTED FILE — original was lost on 2026-05-26.
+// Minimal scaffold containing only the mixins referenced in the codebase.
+// `primary-btn-1` is used by HeroSection.vue. Adjust to match original styling.
+
+@mixin primary-btn-1 {
+  background-color: var(--color-primary, #12408e);
+  color: hsl(0, 0%, 100%);
+  border: 1px solid var(--color-primary, #12408e);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    background-color: var(--hdr-primary-dark, #0c3070);
+    border-color: var(--hdr-primary-dark, #0c3070);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

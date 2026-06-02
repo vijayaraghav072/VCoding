@@ -65,8 +65,10 @@
       <div class="site-footer-bottom-bar">
         <p class="site-footer-copyright-text">&copy; {{ year }} Vcoding. Built for learning.</p>
         <ul class="site-footer-legal-list">
+          <li><RouterLink :to="{ name: 'about' }" class="site-footer-link site-footer-link--muted">About</RouterLink></li>
           <li><RouterLink :to="{ name: 'privacy-policy' }" class="site-footer-link site-footer-link--muted">Privacy</RouterLink></li>
           <li><RouterLink :to="{ name: 'terms-and-conditions' }" class="site-footer-link site-footer-link--muted">Terms</RouterLink></li>
+          <li><RouterLink :to="{ name: 'disclaimer' }" class="site-footer-link site-footer-link--muted">Disclaimer</RouterLink></li>
           <li><RouterLink :to="{ name: 'contact' }" class="site-footer-link site-footer-link--muted">Contact</RouterLink></li>
         </ul>
       </div>
@@ -87,7 +89,7 @@ const year = computed<number>(() => new Date().getFullYear());
   position: relative;
   z-index: 2;
   background: #000000;
-  color: hsl(0, 0%, 100%);
+  color: #ffffff;
   padding: 64px 24px 24px;
   font-family: var(--font-sans);
 }
@@ -112,7 +114,7 @@ const year = computed<number>(() => new Date().getFullYear());
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: hsl(0, 0%, 100%);
+  color: #ffffff;
   text-decoration: none;
   margin-bottom: 16px;
   transition: color 0.2s ease;
@@ -131,7 +133,7 @@ const year = computed<number>(() => new Date().getFullYear());
   flex-shrink: 0;
   border-radius: 8px;
   padding: 4px;
-  background: rgba(var(--color-primary-rgb), 0.18);
+  background: rgba(18, 64, 142, 0.15);
   color: var(--color-primary);
 }
 
@@ -144,17 +146,17 @@ const year = computed<number>(() => new Date().getFullYear());
 .site-footer-brand-description {
   margin: 0;
   font-size: 0.9rem;
-  line-height: 1.65;
-  color: rgba(var(--color-secondary-rgb), 0.6);
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .site-footer-column-heading {
-  margin: 0 0 18px 0;
-  font-size: 0.82rem;
+  color: #ffffff;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: hsl(0, 0%, 100%);
+  margin: 0 0 22px 0;
 }
 
 .site-footer-link-list {
@@ -163,24 +165,21 @@ const year = computed<number>(() => new Date().getFullYear());
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 18px;
 }
 
 .site-footer-link {
-  color: hsl(0, 0%, 100%);
-  font-size: 0.92rem;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-.site-footer-link:hover,
-.site-footer-link:focus-visible {
-  color: var(--color-primary);
-  outline: none;
-}
+
 
 .site-footer-link--muted {
-  color: rgba(var(--color-secondary-rgb), 0.55);
+  color: rgba(255, 255, 255, 0.55);
   font-size: 0.85rem;
 }
 
@@ -204,9 +203,9 @@ const year = computed<number>(() => new Date().getFullYear());
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  border: 1px solid rgba(var(--color-secondary-rgb), 0.12);
-  background: rgba(var(--color-secondary-rgb), 0.04);
-  color: hsl(0, 0%, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
   transition:
     color 0.2s ease,
     border-color 0.2s ease,
@@ -218,7 +217,7 @@ const year = computed<number>(() => new Date().getFullYear());
 .site-footer-social-link:focus-visible {
   color: var(--color-primary);
   border-color: var(--color-primary);
-  background: rgba(var(--color-primary-rgb), 0.12);
+  background: rgba(18, 64, 142, 0.12);
   transform: translateY(-2px);
   outline: none;
 }
@@ -230,13 +229,14 @@ const year = computed<number>(() => new Date().getFullYear());
   flex-wrap: wrap;
   gap: 12px;
   padding-top: 24px;
-  border-top: 1px solid #1f2937;
-  font-size: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .site-footer-copyright-text {
   margin: 0;
-  color: rgba(var(--color-secondary-rgb), 0.5);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .site-footer-legal-list {

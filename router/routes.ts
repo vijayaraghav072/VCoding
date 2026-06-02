@@ -43,10 +43,12 @@ export const routes: RouteRecordRaw[] = [
     meta: seo('termsConditions'),
   },
   { path: '/contact', name: 'contact', component: () => import('@/views/ContactView.vue'), meta: seo('contact') },
+  { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue'), meta: seo('about') },
+  { path: '/disclaimer', name: 'disclaimer', component: () => import('@/views/DisclaimerView.vue'), meta: seo('disclaimer') },
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/NotFoundView.vue'),
-    meta: { noIndex: true },
+    meta: { title: 'Page Not Found', noIndex: true },
   },
 ]

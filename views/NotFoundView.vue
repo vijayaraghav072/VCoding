@@ -11,6 +11,14 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useSeo } from '@/composables/useSeo'
+
+useSeo({
+  title: 'Page Not Found',
+  description: 'The page you are looking for does not exist or has been moved.',
+  path: '/404',
+  noIndex: true,
+})
 </script>
 
 <style scoped>

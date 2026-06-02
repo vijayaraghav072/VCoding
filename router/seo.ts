@@ -60,4 +60,14 @@ export const routeSeoDefaults: Record<string, RouteMeta> = {
     description:
       'Contact Vcoding for support, feedback, business inquiries, partnerships, or technical assistance related to our educational platform.',
   },
+  about: {
+    title: 'About Us',
+    description:
+      'Learn about Vcoding, a free educational platform for programming, data structures, algorithms, system design, and full-stack development. Our mission, team, and commitment to quality education.',
+  },
+  disclaimer: {
+    title: 'Disclaimer',
+    description:
+      'Read the Disclaimer for Vcoding. All content is provided for educational purposes only. We make no guarantees regarding accuracy or completeness of information.',
+  },
 }

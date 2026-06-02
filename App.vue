@@ -1,12 +1,13 @@
 <template>
-  <a href="#main-content" class="skip-to-content">Skip to content</a>
-
   <Headerbar @open-login="goToLogin" />
 
   <main id="main-content" class="app-main">
     <RouterView />
   </main>
 
+  <WhyVcodingSection />
+  <TestimonialSection />
+  <CtaSection />
   <FooterSection />
 
   <div
@@ -22,6 +23,9 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from 'vue-router'
 import Headerbar from '@/components/Headerbar.vue'
+import WhyVcodingSection from '@/components/WhyVcodingSection.vue'
+import TestimonialSection from '@/components/TestimonialSection.vue'
+import CtaSection from '@/components/CtaSection.vue'
 import FooterSection from '@/components/FooterSection.vue'
 import { useSeo, useOrganizationSchema, useWebsiteSchema } from '@/composables/useSeo'
 import { useRouteAnnouncer } from '@/composables/useRouteAnnouncer'

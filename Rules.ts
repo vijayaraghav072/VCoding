@@ -212,4 +212,93 @@ Build a highly trusted educational platform capable of ranking on Google organic
 - professional design
 - helpful educational value
 - excellent user experience
+
+
+
+DESIGN PATTERNS & DSA RULES:
+
+- The project must actively use clean, scalable software design patterns wherever applicable.
+- Prefer industry-standard patterns such as:
+  - Singleton
+  - Factory
+  - Strategy
+  - Observer
+  - Module Pattern
+  - Repository Pattern (for data access layers)
+
+- All code architecture must be:
+  - modular
+  - reusable
+  - testable
+  - maintainable
+  - loosely coupled
+
+- Avoid tightly coupled logic in components.
+
+- Data Structures & Algorithms (DSA) must be used intentionally where appropriate:
+  - Use efficient data structures like:
+    - Arrays
+    - HashMaps / Maps
+    - Sets
+    - Trees (for hierarchical content like docs/tutorials)
+    - Graphs (for topic linking / knowledge maps)
+  - Optimize for time and space complexity.
+  - Avoid unnecessary nested loops or inefficient logic.
+  - Prefer optimal solutions (O(n log n) or better where possible).
+
+- For educational content features:
+  - Use tree-based structures for topic categorization.
+  - Use graph-based structure for internal linking between topics.
+  - Use caching/memoization for repeated computations or rendering.
+
+
+
+
+
+  GOOGLE ADSENSE APPROVAL RULES:
+
+- The platform must strictly follow Google AdSense policies and quality guidelines.
+
+CONTENT QUALITY REQUIREMENTS:
+- All content must be original, human-like, and valuable.
+- No thin content or auto-generated spam pages.
+- Each page must provide complete and useful information.
+- Avoid duplicate or near-duplicate articles.
+- Content must demonstrate clear expertise and depth.
+
+WEBSITE STRUCTURE REQUIREMENTS:
+- Must include:
+  - About page
+  - Contact page
+  - Privacy Policy page
+  - Terms & Conditions page
+  - Disclaimer page
+
+USER EXPERIENCE REQUIREMENTS:
+- Clean and professional UI/UX.
+- Easy navigation across all pages.
+- No broken links or empty pages.
+- Fast loading on both mobile and desktop.
+- No intrusive popups or aggressive ads.
+
+SEO & TRAFFIC READINESS:
+- Pages must be properly indexed by Google.
+- Proper internal linking structure must exist.
+- Sitemap and robots.txt must be correctly configured.
+- Content must target real search queries with intent.
+
+AD PLACEMENT RULES (POST-APPROVAL READY):
+- Ads must be placed naturally within content flow.
+- No excessive ad density.
+- Avoid misleading clicks or accidental ad taps.
+- Maintain user readability and experience first.
+
+POLICY COMPLIANCE:
+- No copyrighted copied content.
+- No scraped content from other websites.
+- No misleading or clickbait content.
+- No restricted or prohibited content niches.
+
+FINAL GOAL:
+- Ensure the website is fully eligible for Google AdSense approval by maintaining high-quality content, strong UX, and policy compliance.
 `;

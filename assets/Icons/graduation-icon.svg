@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 2 2 10"/><path d="M6 10v8h12v-8"/><line x1="12" y1="6" x2="12" y2="2"/><path d="M8 18h8"/><circle cx="12" cy="10" r="0.5"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!-- Tassel (lighter gray) -->
+  <path d="M14 16l-5 4v14" fill="none" stroke="#9ca3af" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Mortarboard top -->
+  <path d="M24 8L44 20L24 26L4 20Z" fill="currentColor"/>
+  <!-- Cap band -->
+  <path d="M14 24v10c0 0 2 4 10 4s10-4 10-4V24l-10 4z" fill="currentColor"/>
+  <!-- White curve separator between top and band -->
+  <path d="M14 22.5c3.5 2 7 3.5 10 4.5c3-1 6.5-2.5 10-4.5" fill="none" stroke="#fff" stroke-width="2.5"/>
+</svg>

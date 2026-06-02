@@ -374,14 +374,14 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  border-left: 4px solid var(--color-primary-100);
+  border-left: 2px solid var(--color-primary-100);
   padding-left: 16px;
   position: relative;
 }
 
 .terms-toc-indicator {
   position: absolute;
-  left: -3.5px;
+  left: -2px;
   top: 0;
   width: 3px;
   border-radius: 3px;

@@ -64,6 +64,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import SvgIcon from "@/common/UI-components/SvgIcon.vue";
+import { useCountUp } from "@/composables/useCountUp";
 
 interface HeroStat {
   value: string;
@@ -191,163 +192,19 @@ const startAccentTypingLoop = (el: HTMLElement): void => {
   typingTimerId = setTimeout(tick, 500);
 };
 
-/* ------------------------------------------------------------------
- *  Stats count-up animation
- *  ------------------------------------------------------------------
- *  Each `.hero-stats-item-value` carries a `data-stat-target` string
- *  such as "500+", "1,000+" or "50K+". On first hero visibility
- *  (IntersectionObserver, 30% threshold) the numbers tween from 0 to
- *  their target over 2.2s using easeOutQuart. `prefers-reduced-motion`
- *  users get the final values written immediately — no tween.
- * ------------------------------------------------------------------ */
-
-interface ParsedStatTarget {
-  element: HTMLElement;
-  end: number;
-  suffix: string;
-  isK: boolean;
-}
-
-const COUNT_UP_DURATION_MS = 2200;
-
-let countUpRafId: number | null = null;
-let countUpObserver: IntersectionObserver | null = null;
-let countUpHasRun = false;
-
-const parseStatTarget = (
-  element: HTMLElement,
-  raw: string,
-): ParsedStatTarget | null => {
-  const normalised = raw.replace(/,/g, "").trim();
-  const match = normalised.match(/^([\d.]+)\s*(K?)(\+?)$/i);
-  if (!match) return null;
-
-  const [, numericPart, kPart, plusPart] = match;
-  const isK = kPart.toUpperCase() === "K";
-  const baseNumber = parseFloat(numericPart);
-  if (Number.isNaN(baseNumber)) return null;
-
-  return {
-    element,
-    end: isK ? baseNumber * 1000 : baseNumber,
-    suffix: plusPart,
-    isK,
-  };
-};
-
-const formatStatValue = (current: number, target: ParsedStatTarget): string => {
-  if (target.isK) {
-    const kValue = current / 1000;
-    const kDisplay =
-      kValue >= 1 ? `${Math.round(kValue)}` : kValue.toFixed(1);
-    return `${kDisplay}K${target.suffix}`;
-  }
-  return `${Math.round(current).toLocaleString("en-US")}${target.suffix}`;
-};
-
-const buildInitialZeroState = (target: ParsedStatTarget): string =>
-  target.isK ? `0K${target.suffix}` : `0${target.suffix}`;
-
-const collectStatTargets = (): ParsedStatTarget[] => {
-  if (!statsListRef.value) return [];
-  const valueNodes = statsListRef.value.querySelectorAll<HTMLElement>(
-    ".hero-stats-item-value",
-  );
-  const parsed: ParsedStatTarget[] = [];
-  valueNodes.forEach((node) => {
-    const raw = node.dataset.statTarget ?? node.textContent ?? "";
-    const target = parseStatTarget(node, raw);
-    if (target) parsed.push(target);
-  });
-  return parsed;
-};
-
-const prefersReducedMotion = (): boolean =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const runStatsCountUp = (targets: ParsedStatTarget[]): void => {
-  if (targets.length === 0) return;
-
-  if (prefersReducedMotion()) {
-    targets.forEach((target) => {
-      target.element.textContent = formatStatValue(target.end, target);
-    });
-    return;
-  }
-
-  const startTimestamp = performance.now();
-
-  const step = (now: number): void => {
-    const elapsed = now - startTimestamp;
-    const progress = Math.min(elapsed / COUNT_UP_DURATION_MS, 1);
-    const eased = 1 - Math.pow(1 - progress, 4);
-
-    targets.forEach((target) => {
-      target.element.textContent = formatStatValue(eased * target.end, target);
-    });
-
-    if (progress < 1) {
-      countUpRafId = requestAnimationFrame(step);
-    } else {
-      countUpRafId = null;
-    }
-  };
-
-  countUpRafId = requestAnimationFrame(step);
-};
-
-const initStatsCountUp = (): void => {
-  const targets = collectStatTargets();
-  if (targets.length === 0) return;
-
-  targets.forEach((target) => {
-    target.element.textContent = buildInitialZeroState(target);
-  });
-
-  if (!heroSectionRef.value || typeof IntersectionObserver === "undefined") {
-    runStatsCountUp(targets);
-    countUpHasRun = true;
-    return;
-  }
-
-  countUpObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !countUpHasRun) {
-          countUpHasRun = true;
-          runStatsCountUp(targets);
-          observer.disconnect();
-          countUpObserver = null;
-        }
-      });
-    },
-    { threshold: 0.3 },
-  );
-
-  countUpObserver.observe(heroSectionRef.value);
-};
+useCountUp(statsListRef, '.hero-stats-item-value');
 
 onMounted(() => {
   if (accentTextRef.value) {
     accentTextRef.value.textContent = "";
     startAccentTypingLoop(accentTextRef.value);
   }
-  initStatsCountUp();
 });
 
 onBeforeUnmount(() => {
   if (typingTimerId !== null) {
     clearTimeout(typingTimerId);
     typingTimerId = null;
-  }
-  if (countUpRafId !== null) {
-    cancelAnimationFrame(countUpRafId);
-    countUpRafId = null;
-  }
-  if (countUpObserver !== null) {
-    countUpObserver.disconnect();
-    countUpObserver = null;
   }
 });
 </script>
@@ -534,6 +391,25 @@ onBeforeUnmount(() => {
   padding: 13px 22px;
   font-size: 15px;
   border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(var(--color-primary-rgb), 0.25);
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(18, 64, 142, 0.28);
+  }
+
+  &:active {
+    transform: scale(1.02);
+  }
+}
+
+.hero-action-button--primary__arrow {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+
+  .hero-action-button--primary:hover & {
+    transform: translateX(3px);
+  }
 }
 
 .hero-action-button--ghost {

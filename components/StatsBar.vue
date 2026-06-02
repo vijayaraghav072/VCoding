@@ -10,160 +10,24 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { ref } from 'vue'
+import { useCountUp } from '@/composables/useCountUp'
 
 interface StatItem {
-  value: string;
-  label: string;
+  value: string
+  label: string
 }
 
 const stats: StatItem[] = [
-  { value: "500+", label: "Articles" },
-  { value: "1,000+", label: "Practice Problems" },
-  { value: "6", label: "Courses" },
-  { value: "50K+", label: "Learners" },
-];
+  { value: '500+', label: 'Articles' },
+  { value: '1,000+', label: 'Practice Problems' },
+  { value: '6', label: 'Courses' },
+  { value: '50K+', label: 'Learners' },
+]
 
-const statsBarRef = ref<HTMLElement | null>(null);
+const statsBarRef = ref<HTMLElement | null>(null)
 
-interface ParsedStatTarget {
-  element: HTMLElement;
-  end: number;
-  suffix: string;
-  isK: boolean;
-}
-
-const COUNT_UP_DURATION_MS = 2200;
-
-let countUpRafId: number | null = null;
-let countUpObserver: IntersectionObserver | null = null;
-let countUpHasRun = false;
-
-const parseStatTarget = (
-  element: HTMLElement,
-  raw: string,
-): ParsedStatTarget | null => {
-  const normalised = raw.replace(/,/g, "").trim();
-  const match = normalised.match(/^([\d.]+)\s*(K?)(\+?)$/i);
-  if (!match) return null;
-
-  const [, numericPart, kPart, plusPart] = match;
-  const isK = kPart.toUpperCase() === "K";
-  const baseNumber = parseFloat(numericPart);
-  if (Number.isNaN(baseNumber)) return null;
-
-  return {
-    element,
-    end: isK ? baseNumber * 1000 : baseNumber,
-    suffix: plusPart,
-    isK,
-  };
-};
-
-const formatStatValue = (current: number, target: ParsedStatTarget): string => {
-  if (target.isK) {
-    const kValue = current / 1000;
-    const kDisplay = kValue >= 1 ? `${Math.round(kValue)}` : kValue.toFixed(1);
-    return `${kDisplay}K${target.suffix}`;
-  }
-  return `${Math.round(current).toLocaleString("en-US")}${target.suffix}`;
-};
-
-const buildInitialZeroState = (target: ParsedStatTarget): string =>
-  target.isK ? `0K${target.suffix}` : `0${target.suffix}`;
-
-const collectStatTargets = (): ParsedStatTarget[] => {
-  if (!statsBarRef.value) return [];
-  const valueNodes = statsBarRef.value.querySelectorAll<HTMLElement>(".stats-bar-value");
-  const parsed: ParsedStatTarget[] = [];
-  valueNodes.forEach((node) => {
-    const raw = node.dataset.statTarget ?? node.textContent ?? "";
-    const target = parseStatTarget(node, raw);
-    if (target) parsed.push(target);
-  });
-  return parsed;
-};
-
-const prefersReducedMotion = (): boolean =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const runStatsCountUp = (targets: ParsedStatTarget[]): void => {
-  if (targets.length === 0) return;
-
-  if (prefersReducedMotion()) {
-    targets.forEach((target) => {
-      target.element.textContent = formatStatValue(target.end, target);
-    });
-    return;
-  }
-
-  const startTimestamp = performance.now();
-
-  const step = (now: number): void => {
-    const elapsed = now - startTimestamp;
-    const progress = Math.min(elapsed / COUNT_UP_DURATION_MS, 1);
-    const eased = 1 - Math.pow(1 - progress, 4);
-
-    targets.forEach((target) => {
-      target.element.textContent = formatStatValue(eased * target.end, target);
-    });
-
-    if (progress < 1) {
-      countUpRafId = requestAnimationFrame(step);
-    } else {
-      countUpRafId = null;
-    }
-  };
-
-  countUpRafId = requestAnimationFrame(step);
-};
-
-const initStatsCountUp = (): void => {
-  const targets = collectStatTargets();
-  if (targets.length === 0) return;
-
-  targets.forEach((target) => {
-    target.element.textContent = buildInitialZeroState(target);
-  });
-
-  if (!statsBarRef.value || typeof IntersectionObserver === "undefined") {
-    runStatsCountUp(targets);
-    countUpHasRun = true;
-    return;
-  }
-
-  countUpObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !countUpHasRun) {
-          countUpHasRun = true;
-          runStatsCountUp(targets);
-          observer.disconnect();
-          countUpObserver = null;
-        }
-      });
-    },
-    { threshold: 0.3 },
-  );
-
-  countUpObserver.observe(statsBarRef.value);
-};
-
-onMounted(() => {
-  initStatsCountUp();
-});
-
-onBeforeUnmount(() => {
-  if (countUpRafId !== null) {
-    cancelAnimationFrame(countUpRafId);
-    countUpRafId = null;
-  }
-  if (countUpObserver !== null) {
-    countUpObserver.disconnect();
-    countUpObserver = null;
-  }
-});
+useCountUp(statsBarRef, '.stats-bar-value')
 </script>
 
 <style scoped>

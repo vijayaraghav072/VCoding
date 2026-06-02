@@ -7,7 +7,7 @@
           <span class="signup-logo-mark">
             <SvgIcon icon-name="logo-braces" width="18" height="18" />
           </span>
-          <span class="signup-logo-text">Dev<span class="signup-logo-accent">World</span></span>
+          <span class="signup-logo-text">V<span class="signup-logo-accent">coding</span></span>
         </RouterLink>
 
         <div class="signup-heading">

@@ -17,7 +17,7 @@
       </p>
 
       <div
-        class="testimonial-stack"
+        class="testimonial-slider"
         tabindex="0"
         role="region"
         aria-roledescription="carousel"
@@ -32,40 +32,33 @@
           v-for="(testimonial, i) in testimonials"
           :key="testimonial.id"
           class="testimonial-card"
-          :class="{ 'testimonial-card--active': getDepth(i) === 0 }"
-          :style="getCardStyle(i)"
-          :aria-hidden="getDepth(i) >= MAX_VISIBLE"
+          :class="{
+            'testimonial-card--active': getPosition(i) === 'center',
+            'testimonial-card--left': getPosition(i) === 'left',
+            'testimonial-card--right': getPosition(i) === 'right',
+            'testimonial-card--pre-left': getPosition(i) === 'pre-left',
+            'testimonial-card--pre-right': getPosition(i) === 'pre-right',
+          }"
+          :aria-hidden="getPosition(i) !== 'center'"
           role="group"
-          :aria-roledescription="getDepth(i) === 0 ? 'slide' : undefined"
-          :aria-label="getDepth(i) === 0 ? `Testimonial from ${testimonial.name}` : undefined"
+          :aria-roledescription="getPosition(i) === 'center' ? 'slide' : undefined"
+          :aria-label="getPosition(i) === 'center' ? `Testimonial from ${testimonial.name}` : undefined"
         >
-          <span class="testimonial-card__quote-mark" aria-hidden="true">&ldquo;</span>
-
-          <p class="testimonial-card__quote">{{ testimonial.quote }}</p>
-
-          <div v-if="testimonial.metrics" class="testimonial-card__metrics">
-            <span
-              v-for="metric in testimonial.metrics"
-              :key="metric.label"
-              class="testimonial-card__metric"
-            >
-              <strong class="testimonial-card__metric-value">{{ metric.value }}</strong>
-              <span class="testimonial-card__metric-label">{{ metric.label }}</span>
-            </span>
-          </div>
-
-          <div class="testimonial-card__author">
-            <span
-              class="testimonial-card__avatar"
-              :style="{ background: testimonial.avatarColor }"
-              aria-hidden="true"
-            >
-              {{ testimonial.initials }}
-            </span>
-            <div class="testimonial-card__author-info">
+          <div class="testimonial-card__body">
+            <span class="testimonial-card__quote-mark" aria-hidden="true">&ldquo;</span>
+            <p class="testimonial-card__quote">{{ testimonial.quote }}</p>
+            <div class="testimonial-card__author">
               <span class="testimonial-card__name">{{ testimonial.name }}</span>
               <span class="testimonial-card__role">{{ testimonial.role }}</span>
             </div>
+          </div>
+          <div class="testimonial-card__image-wrap">
+            <img
+              :src="testimonial.avatar"
+              :alt="`Avatar of ${testimonial.name}`"
+              class="testimonial-card__image"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>
@@ -116,120 +109,65 @@ interface Testimonial {
   quote: string
   name: string
   role: string
-  initials: string
-  avatarColor: string
-  metrics?: { label: string; value: string }[]
+  avatar: string
 }
 
 const AUTOPLAY_INTERVAL = 5000
-const MAX_VISIBLE = 4
 
 const testimonials: Testimonial[] = [
   {
     id: 1,
     quote:
       'Vcoding completely changed how I approach problem-solving. The structured courses and curated practice problems helped me crack my dream job interview at a top tech company.',
-    name: 'Arjun Mehta',
+    name: 'Emily Watson',
     role: 'Software Engineer at Google',
-    initials: 'AM',
-    avatarColor: '#4f46e5',
-    metrics: [
-      { label: 'Problems Solved', value: '450+' },
-      { label: 'Accuracy', value: '94%' },
-    ],
+    avatar: 'https://api.dicebear.com/10.x/adventurer/svg?eyesVariant=variant21&eyesProbability=100&mouthVariant=variant16&glassesVariant=variant02&glassesProbability=50&eyebrowsVariant=variant09&earringsVariant=variant04&earringsProbability=95&detailsProbability=96&detailsVariant=&hairColorAngle=-86&hairColorFillStops=2&hairColor=0e0e0e,85c2c6,562306,dba3be,592454,ac6511,cb6820,ab2a18&seed=azb523cf',
   },
   {
     id: 2,
     quote:
-      "The DSA roadmap on Vcoding is the best I've found anywhere online. Clear explanations, real-world examples, and a difficulty curve that actually makes sense for competitive programming.",
-    name: 'Priya Sharma',
-    role: 'CS Student, IIT Delhi',
-    initials: 'PS',
-    avatarColor: '#0891b2',
-    metrics: [
-      { label: 'Course Progress', value: '100%' },
-      { label: 'Streak', value: '120 days' },
-    ],
+      "The DSA roadmap on Vcoding is the best I've found anywhere online. Clear explanations, real-world examples, and a difficulty curve that actually makes sense.",
+    name: 'James Carter',
+    role: 'CS Student, MIT',
+    avatar: 'https://api.dicebear.com/10.x/adventurer/svg?eyesVariant=variant23&eyesProbability=100&mouthVariant=variant13,variant23,variant26,variant28,variant29,variant30&seed=m25qt4vc',
   },
   {
     id: 3,
     quote:
-      "I switched careers from mechanical engineering to software development. Vcoding's step-by-step courses made the transition smooth and much less overwhelming than I expected.",
-    name: 'Rahul Verma',
-    role: 'Full-Stack Developer at Flipkart',
-    initials: 'RV',
-    avatarColor: '#059669',
-    metrics: [
-      { label: 'Courses Completed', value: '12' },
-      { label: 'Projects Built', value: '8' },
-    ],
+      "I switched careers from mechanical engineering to software development. Vcoding's step-by-step courses made the transition smooth and much less overwhelming.",
+    name: 'Oliver Bennett',
+    role: 'Full-Stack Developer at Shopify',
+    avatar: 'https://api.dicebear.com/10.x/adventurer/svg?eyesVariant=variant04,variant05,variant06,variant07,variant08,variant09,variant10,variant11,variant12,variant13,variant14,variant15,variant16,variant17,variant18,variant21,variant23,variant24,variant25,variant26&eyesProbability=100&mouthVariant=variant01,variant02,variant06,variant07,variant08,variant09,variant10,variant11,variant12,variant15,variant16,variant17,variant18,variant19,variant20,variant21,variant22,variant23,variant24,variant25,variant26,variant27,variant28,variant29,variant30&seed=9utebboa',
   },
   {
     id: 4,
     quote:
-      'What sets Vcoding apart is the quality of content. Every article feels like it was written by someone who truly understands what learners struggle with and how to explain it clearly.',
-    name: 'Sneha Patil',
+      'Vcoding made me fall in love with coding all over again. The hands-on projects and clear explanations gave me the confidence to ace my interviews and land my dream role.',
+    name: 'Sophie Mitchell',
     role: 'Backend Engineer at Amazon',
-    initials: 'SP',
-    avatarColor: '#dc2626',
-    metrics: [
-      { label: 'Articles Read', value: '200+' },
-      { label: 'Rank', value: 'Top 5%' },
-    ],
+    avatar: 'https://api.dicebear.com/10.x/adventurer/svg?eyesVariant=variant21&eyesProbability=100&mouthVariant=variant01&glassesVariant=variant02&glassesProbability=50&eyebrowsVariant=variant09&earringsVariant=variant04&earringsProbability=95&detailsProbability=96&detailsVariant=&hairColorAngle=-86&hairColorFillStops=2&skinColor=f2d3b1,ecad80&hairColor=0e0e0e,e5d7a3,6a4e35,afafaf,3eac2c,dba3be,ab2a18&seed=r3jhfiiw',
   },
   {
     id: 5,
     quote:
       'From zero coding knowledge to building full-stack apps in six months — Vcoding gave me the roadmap and confidence I needed to make the career leap.',
-    name: 'Karthik Nair',
-    role: 'Frontend Developer at Razorpay',
-    initials: 'KN',
-    avatarColor: '#7c3aed',
-    metrics: [
-      { label: 'Skills Learned', value: '15+' },
-      { label: 'Accuracy', value: '91%' },
-    ],
+    name: 'Ethan Brooks',
+    role: 'Frontend Developer at Stripe',
+    avatar: 'https://api.dicebear.com/9.x/adventurer/svg?seed=KarthikNair',
   },
 ]
 
 const activeIndex = ref(0)
 let autoplayTimer: ReturnType<typeof setInterval> | null = null
 
-function getDepth(index: number): number {
-  return (index - activeIndex.value + testimonials.length) % testimonials.length
-}
-
-function getCardStyle(index: number): Record<string, string> {
-  const depth = getDepth(index)
-
-  if (depth >= MAX_VISIBLE) {
-    return {
-      '--card-y': `${MAX_VISIBLE * 16}px`,
-      '--card-scale': `${1 - MAX_VISIBLE * 0.05}`,
-      '--card-z': '0',
-      '--card-opacity': '0',
-      '--card-blur': `${MAX_VISIBLE}px`,
-      '--card-shadow': '0 2px 8px rgba(0,0,0,0.02)',
-      'pointer-events': 'none',
-    }
-  }
-
-  const shadows = [
-    '0 8px 32px rgba(0,0,0,0.10)',
-    '0 4px 18px rgba(0,0,0,0.06)',
-    '0 2px 10px rgba(0,0,0,0.04)',
-    '0 1px 4px rgba(0,0,0,0.02)',
-  ]
-
-  return {
-    '--card-y': `${depth * 16}px`,
-    '--card-scale': `${1 - depth * 0.05}`,
-    '--card-z': `${MAX_VISIBLE - depth}`,
-    '--card-opacity': `${1 - depth * 0.2}`,
-    '--card-blur': `${depth * 0.7}px`,
-    '--card-shadow': shadows[depth],
-    'pointer-events': depth === 0 ? 'auto' : 'none',
-  }
+function getPosition(index: number): 'left' | 'center' | 'right' | 'pre-left' | 'pre-right' | 'hidden' {
+  const diff = (index - activeIndex.value + testimonials.length) % testimonials.length
+  if (diff === 0) return 'center'
+  if (diff === 1) return 'right'
+  if (diff === testimonials.length - 1) return 'left'
+  if (diff === 2) return 'pre-right'
+  if (diff === testimonials.length - 2) return 'pre-left'
+  return 'hidden'
 }
 
 function next() {
@@ -303,7 +241,7 @@ onUnmounted(() => {
 }
 
 .testimonial-section__inner {
-  max-width: 720px;
+  // max-width: 1100px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -337,6 +275,7 @@ onUnmounted(() => {
   color: #1e293b;
   margin: 0 0 16px 0;
   line-height: 1.15;
+  max-width: 600px;
 }
 
 .testimonial-section__title-accent {
@@ -364,147 +303,202 @@ onUnmounted(() => {
   margin: 0 0 48px 0;
 }
 
-/* ── Card Stack ── */
+/* ── Slider ── */
 
-.testimonial-stack {
+.testimonial-slider {
+  --slide-left: -151%;
+  --slide-right: 51%;
+
   position: relative;
   width: 100%;
-  max-width: 560px;
-  min-height: 320px;
+  height: 400px;
   margin-bottom: 36px;
+  padding: 28px;
   outline: none;
+  overflow: hidden;
 
   &:focus-visible {
     border-radius: 20px;
     outline: 2px solid var(--color-primary, #12408e);
     outline-offset: 8px;
   }
+
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 15%,
+    #000 85%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 15%,
+    #000 85%,
+    transparent 100%
+  );
 }
+
+/* ── Card ── */
 
 .testimonial-card {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  border: 1px solid hsl(210, 18%, 93%);
-  border-radius: 16px;
-  padding: 32px 28px 24px;
-  text-align: left;
-  cursor: pointer;
-  transform-origin: center top;
+  top: 24px;
+  left: 50%;
+  width: 55%;
+  height: calc(100% - 80px);
+  display: flex;
+  background: linear-gradient(
+    145deg,
+    rgba(235, 240, 255, 0.95) 0%,
+    rgba(225, 233, 255, 0.7) 50%,
+    rgba(242, 244, 255, 0.5) 100%
+  );
+  border: 1px solid rgba(79, 70, 229, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(79, 70, 229, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.03);
   will-change: transform, opacity;
-
-  transform: translateY(var(--card-y, 0)) scale(var(--card-scale, 1));
-  z-index: var(--card-z, 0);
-  opacity: var(--card-opacity, 1);
-  filter: blur(var(--card-blur, 0px));
-  box-shadow: var(--card-shadow, 0 4px 16px rgba(0, 0, 0, 0.06));
-
   transition:
     transform 650ms cubic-bezier(0.34, 1.56, 0.64, 1),
     opacity 500ms ease,
-    filter 500ms ease,
     box-shadow 400ms ease;
+
+  // Default hidden state
+  transform: translateX(-50%) scale(0.88);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  /* ── Position states ── */
+
+  &--active {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+    box-shadow:
+      0 6px 20px rgba(79, 70, 229, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.05);
+ 
+
+    &:hover {
+      transform: translateX(-50%) scale(1.015);
+      box-shadow:
+        0 18px 52px rgba(79, 70, 229, 0.14),
+        0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  &--left {
+    transform: translateX(var(--slide-left)) scale(0.92);
+    opacity: 1;
+    z-index: 5;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.3) 20%, #000 60%);
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.3) 20%, #000 60%);
+  }
+
+  &--right {
+    transform: translateX(var(--slide-right)) scale(0.92);
+    opacity: 1;
+    z-index: 5;
+    -webkit-mask-image: linear-gradient(to right, #000 40%, rgba(0, 0, 0, 0.3) 80%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 40%, rgba(0, 0, 0, 0.3) 80%, transparent 100%);
+  }
+
+  &--pre-left {
+    transform: translateX(var(--slide-left)) scale(0.92);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  &--pre-right {
+    transform: translateX(var(--slide-right)) scale(0.92);
+    opacity: 0;
+    z-index: 1;
+  }
 }
 
-.testimonial-card--active:hover {
-  transform: translateY(calc(var(--card-y, 0px) - 8px)) scale(var(--card-scale, 1));
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.13);
-}
+/* ── Card Body (text side) ── */
 
-/* ── Card Content ── */
+.testimonial-card__body {
+  flex: 1;
+  padding: 36px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
 
 .testimonial-card__quote-mark {
-  position: absolute;
-  top: 12px;
-  right: 24px;
-  font-size: 4.5rem;
+  font-size: 5.5rem;
   font-family: Georgia, 'Times New Roman', serif;
-  line-height: 1;
-  color: var(--color-primary-100, hsl(216, 70%, 92%));
+  line-height: 0.5;
+  color: rgba(79, 70, 229, 0.16);
+  margin-bottom: 12px;
+  display: block;
   pointer-events: none;
   user-select: none;
 }
 
 .testimonial-card__quote {
-  font-size: 0.95rem;
-  line-height: 1.72;
-  color: hsl(210, 15%, 30%);
-  margin: 0 0 20px 0;
-  position: relative;
-  padding-right: 32px;
-}
-
-.testimonial-card__metrics {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.testimonial-card__metric {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border-radius: 8px;
-  background: var(--color-primary-50, hsl(216, 78%, 97%));
-  font-size: 0.78rem;
-  color: hsl(210, 15%, 35%);
-}
-
-.testimonial-card__metric-value {
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--color-primary, #12408e);
-  font-size: 0.82rem;
-}
-
-.testimonial-card__metric-label {
-  font-weight: 500;
+  line-height: 1.6;
+  color: #1e293b;
+  margin: 0 0 24px 0;
 }
 
 .testimonial-card__author {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid hsl(210, 18%, 94%);
-}
-
-.testimonial-card__avatar {
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.testimonial-card__author-info {
-  display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .testimonial-card__name {
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: hsl(210, 20%, 18%);
+  color: #4f46e5;
 }
 
 .testimonial-card__role {
-  font-size: 0.78rem;
-  color: var(--hdr-text-soft, hsl(210, 10%, 45%));
+  font-size: 0.82rem;
+  color: #64748b;
   font-weight: 500;
 }
 
-/* ── Controls ── */
+/* ── Card Image (avatar side) ── */
+
+.testimonial-card__image-wrap {
+  width: 38%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    rgba(79, 70, 229, 0.03) 0%,
+    rgba(79, 70, 229, 0.07) 100%
+  );
+}
+
+.testimonial-card__image {
+  width: 80%;
+  height: auto;
+  max-height: 80%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(79, 70, 229, 0.1));
+}
+
+/* ── Controls (unchanged) ── */
 
 .testimonial-controls {
   display: flex;
@@ -584,32 +578,74 @@ onUnmounted(() => {
 
 /* ── Responsive ── */
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
+  .testimonial-slider {
+    --slide-left: -140%;
+    --slide-right: 40%;
+    height: 320px;
+  }
+
+  .testimonial-card {
+    width: 62%;
+  }
+
+  .testimonial-card__body {
+    padding: 28px 22px 24px;
+  }
+
+  .testimonial-card__quote-mark {
+    font-size: 4rem;
+  }
+
+  .testimonial-card__quote {
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 640px) {
   .testimonial-section {
     padding: 56px 16px;
   }
 
-  .testimonial-stack {
-    min-height: 350px;
+  .testimonial-slider {
+    height: 380px;
   }
 
   .testimonial-card {
-    padding: 24px 20px 20px;
+    width: 88%;
+    flex-direction: column;
+
+    &--left,
+    &--right,
+    &--pre-left,
+    &--pre-right {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  }
+
+  .testimonial-card__image-wrap {
+    width: 100%;
+    height: 130px;
+    order: -1;
+  }
+
+  .testimonial-card__image {
+    max-height: 90%;
+  }
+
+  .testimonial-card__body {
+    padding: 20px;
   }
 
   .testimonial-card__quote-mark {
-    font-size: 3.5rem;
-    top: 8px;
-    right: 16px;
+    font-size: 3.2rem;
+    margin-bottom: 6px;
   }
 
   .testimonial-card__quote {
     font-size: 0.88rem;
-    padding-right: 20px;
-  }
-
-  .testimonial-card__metrics {
-    gap: 8px;
+    margin-bottom: 16px;
   }
 
   .testimonial-section__subtitle {

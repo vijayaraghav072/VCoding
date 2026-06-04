@@ -19,7 +19,7 @@
         </p>
 
         <div class="hero-action-buttons-group">
-          <button type="button" class="hero-action-button hero-action-button--primary">
+          <button type="button" class="hero-action-button hero-action-button--primary" @click="goToHtmlTutorial">
             <span class="hero-action-button-label">Start Learning</span>
             <span class="hero-action-button-icon hero-action-button--primary__arrow">
               <SvgIcon icon-name="arrow-right-icon" width="16" height="16" />
@@ -63,7 +63,14 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import SvgIcon from "@/common/UI-components/SvgIcon.vue";
+
+const router = useRouter();
+
+function goToHtmlTutorial() {
+  router.push({ name: 'html-learn' });
+}
 import { useCountUp } from "@/composables/useCountUp";
 
 interface HeroStat {

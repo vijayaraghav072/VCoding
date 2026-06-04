@@ -70,4 +70,10 @@ export const routeSeoDefaults: Record<string, RouteMeta> = {
     description:
       'Read the Disclaimer for Vcoding. All content is provided for educational purposes only. We make no guarantees regarding accuracy or completeness of information.',
   },
+  htmlLearn: {
+    title: 'Learn HTML — Free Tutorial & Course',
+    description:
+      'Master HTML from scratch with our structured, free HTML course. Covers elements, attributes, forms, semantic markup, accessibility, SEO, and more. Perfect for beginners and professionals.',
+    ogType: 'article',
+  },
 }

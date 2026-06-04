@@ -16,10 +16,13 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import SvgIcon from '@/common/UI-components/SvgIcon.vue'
 
+const router = useRouter()
+
 const onGetStarted = () => {
-  // TODO: route to the desired page
+  router.push({ name: 'html-learn' })
 }
 </script>
 

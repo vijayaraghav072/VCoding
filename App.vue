@@ -1,14 +1,16 @@
 <template>
   <Headerbar @open-login="goToLogin" />
 
-  <main id="main-content" class="app-main">
+  <main id="main-content" class="app-main" :class="{ 'app-main--full-bleed': isLearningRoute }">
     <RouterView />
   </main>
 
-  <WhyVcodingSection />
-  <TestimonialSection />
-  <CtaSection />
-  <FooterSection />
+  <template v-if="!isLearningRoute">
+    <WhyVcodingSection />
+    <TestimonialSection />
+    <CtaSection />
+    <FooterSection />
+  </template>
 
   <div
     aria-live="polite"
@@ -21,7 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { RouterView, useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 import Headerbar from '@/components/Headerbar.vue'
 import WhyVcodingSection from '@/components/WhyVcodingSection.vue'
 import TestimonialSection from '@/components/TestimonialSection.vue'
@@ -30,8 +33,13 @@ import FooterSection from '@/components/FooterSection.vue'
 import { useSeo, useOrganizationSchema, useWebsiteSchema } from '@/composables/useSeo'
 import { useRouteAnnouncer } from '@/composables/useRouteAnnouncer'
 
+const route = useRoute()
 const router = useRouter()
 const { announcement } = useRouteAnnouncer()
+
+const isLearningRoute = computed(() =>
+  route.path.startsWith('/learn/'),
+)
 
 useOrganizationSchema()
 useWebsiteSchema()
@@ -53,6 +61,12 @@ function goToLogin() {
   width: 100%;
   padding-top: 72px;
   min-height: calc(100vh - 72px);
+}
+
+.app-main--full-bleed {
+  padding-top: 72px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .skip-to-content {

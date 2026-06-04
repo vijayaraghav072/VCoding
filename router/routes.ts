@@ -46,6 +46,12 @@ export const routes: RouteRecordRaw[] = [
   { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue'), meta: seo('about') },
   { path: '/disclaimer', name: 'disclaimer', component: () => import('@/views/DisclaimerView.vue'), meta: seo('disclaimer') },
   {
+    path: '/learn/html',
+    name: 'html-learn',
+    component: () => import('@/features/html/learning/HtmlLearningPage.vue'),
+    meta: seo('htmlLearn'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/NotFoundView.vue'),

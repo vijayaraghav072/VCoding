@@ -22,8 +22,6 @@
         role="region"
         aria-roledescription="carousel"
         aria-label="Testimonial carousel"
-        @mouseenter="pauseAutoplay"
-        @mouseleave="resumeAutoplay"
         @focusin="pauseAutoplay"
         @focusout="resumeAutoplay"
         @keydown="handleKeydown"
@@ -43,6 +41,8 @@
           role="group"
           :aria-roledescription="getPosition(i) === 'center' ? 'slide' : undefined"
           :aria-label="getPosition(i) === 'center' ? `Testimonial from ${testimonial.name}` : undefined"
+          @mouseenter="getPosition(i) === 'center' && pauseAutoplay()"
+          @mouseleave="getPosition(i) === 'center' && resumeAutoplay()"
         >
           <div class="testimonial-card__body">
             <span class="testimonial-card__quote-mark" aria-hidden="true">&ldquo;</span>
